@@ -1,13 +1,27 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.square{
+    background: #fff;
+    border: 1px solid #999;
+    width:30px;
+    height: 30px;
+    
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+
+
+.block{
+    background: #fff;
+    border: 1px solid #000;
+    width: 90px;
+    height: 90px;
 }
+
+.sudoku-board{
+    border: 2px solid #000;
+    width: 276px;
+    height: 276px;
+    display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+    
+}
+
