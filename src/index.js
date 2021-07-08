@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter} from 'react-router-dom'
 import './index.css';
-import './solver';
+
+
 
 
 function Square(props){
-        return <button className="square" onClick={props.onClick}>{props.value}</button>
+        return <button 
+        className={props.btn} 
+        onClick={props.onClick}>
+            {props.value?props.value:""}
+        </button>
 }
 
 class Sudoku extends React.Component{
@@ -13,9 +19,9 @@ class Sudoku extends React.Component{
     constructor(props){
         super(props);
 
-        this.boardIndex=null;
         this.state={
             board: new Array(9),
+            boardIndex:null,
         };
         for(let i=0;i<9;i++){
             this.state.board[i]=new Array(9).fill(0);
@@ -29,45 +35,56 @@ class Sudoku extends React.Component{
     }
 
     handleClick(i,j){
-        console.log(i+j);
-        this.boardIndex=[i,j];
+        this.setState({boardIndex:[i,j]});
+        
     }
 
-    copyBoard(){
-        let board =new Array(9);
-        for (let i = 0; i < 9; i++) {
-            board[i] = this.state.board[i].slice();
+    handleKeys(key){
+        if(48>=key&&key<=57&& this.state.boardIndex){
+            let  i=this.state.boardIndex[0];
+            let j=this.state.boardIndex[1];
+            this.setBoardAtIndex(i,j,key);
         }
-        return board;
+    }
+
+    copyBoard(board){
+        let board2 =new Array(9);
+        for (let i = 0; i < 9; i++) {
+            board2[i] = board[i].slice();
+        }
+        return board2;
+    }
+
+    clearBoard(){
+        let board=new Array(9);
+        for(let i=0;i<9; i++){
+            board[i]=new Array(9).fill(0);
+        }
+        this.setState({board: board});
     }
 
     solve(){
-        var board=this.copyBoard();
+        var board=this.copyBoard(this.state.board);
         sudokuSolver(board);
         return board;
     }
 
     setBoardAtIndex(i,j,value){
-        var board=this.copyBoard();
+        var board=this.copyBoard(this.state.board);
         board[i][j]=parseInt(value);
         console.log(board[i][j])
         this.setState({board: board});
     }
-
-    handleKeys(key){
-        if(48>=key&&key<=57&& this.boardIndex){
-            let  i=this.boardIndex[0];
-            let j=this.boardIndex[1];
-            this.setBoardAtIndex(i,j,key);
-        }
-        this.boardIndex=null
-
-    }
-    
-    
+      
     renderSquare(i, j) {
-        return <Square value={this.state.board[i][j]} 
-        onClick={()=>this.handleClick(i,j)}
+        let classname="square";
+        if (this.state.boardIndex&&i === this.state.boardIndex[0] && j === this.state.boardIndex[1]) classname+=" clicked";
+        return <Square 
+        btn={classname}
+        value={this.state.board[i][j]} 
+        onClick={()=>{
+            this.handleClick(i,j);
+            }}
             />
     }
 
@@ -108,31 +125,45 @@ class Sudoku extends React.Component{
 
             
             </div>
-            <button className="solver" onClick={()=>{ 
-                var board=this.solve();
-                this.setState({board:board});
-                }}>Solve</button>
+            <div className="game-buttons">
+                <button className="solver" onClick={()=>{ 
+                    var board=this.solve();
+                    this.setState({board:board});
+                    }}>Solve
+                </button>
+                <button className="clear" onClick={()=>(this.clearBoard())}>
+                    Clear
+                </button>
+                <button className="check" >
+                    Check
+                </button>
+            </div>
         </div>
         
         )
     }
 }
 
+
+
+ReactDOM.render(<Sudoku/>,document.getElementById("root"));
+
+//Solver
 function sudokuSolver(board) {
     const emptySquare = getEmptySquare(board);
     if (!emptySquare) {
         return true;
     }
     const [i, j] = emptySquare;
-    const candidates = getAllowedNumbers(i, j,board);
+    const candidates = getAllowedNumbers(i, j, board);
     for (let number of candidates) {
         board[i][j] = number;
-        if(sudokuSolver(board)){
+        if (sudokuSolver(board)) {
             return true;
-        }else{
-            board[i][j]=0;
+        } else {
+            board[i][j] = 0;
         }
-            
+
     }
     return false;
 }
@@ -168,6 +199,3 @@ function getAllowedNumbers(i, j, board) {
     return allowedNumbers;
 
 }
-
-
-ReactDOM.render(<Sudoku/>,document.getElementById("root"));

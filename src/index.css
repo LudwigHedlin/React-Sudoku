@@ -1,9 +1,14 @@
 .square{
-    background: #fff;
+    background: rgb(247, 247, 247);
     border: 1px solid #999;
-    width:30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
+    font-size: 25px;
     
+}
+
+.clicked{
+    background:rgb(201, 191, 163);
 }
 
 
@@ -11,17 +16,31 @@
 .block{
     background: #fff;
     border: 1px solid #000;
-    width: 90px;
-    height: 90px;
+    width: 150px;
+    height: 150px;
+    display:flex;
+    flex-wrap:wrap;
 }
 
 .sudoku-board{
     border: 2px solid #000;
-    width: 276px;
-    height: 276px;
+    width: 456px;
+    height: 456px;
     display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin:auto;
     
+}
+
+.game-buttons{
+    background: rgb(47, 58, 153);
+    margin:auto
+}
+
+.sudoku{
+    padding-top: 200px;
+    width: 456px;
+    margin:auto;
 }
 
