@@ -34,8 +34,12 @@
 }
 
 .game-buttons{
-    background: rgb(47, 58, 153);
     margin:auto
+}
+
+.game-buttons .btn{
+    color: black;
+    
 }
 
 .sudoku{

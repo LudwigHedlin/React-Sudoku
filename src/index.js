@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom'
 import './index.css';
-
+import { samplePuzzles } from './puzzles';
 
 
 
@@ -18,16 +18,15 @@ class Sudoku extends React.Component{
 
     constructor(props){
         super(props);
-
+        
+        let board = samplePuzzles[Math.floor((samplePuzzles.length* Math.random()))]
         this.state={
-            board: new Array(9),
+            boardInitial: board,
+            board: this.copyBoard(board),
             boardIndex:null,
         };
-        for(let i=0;i<9;i++){
-            this.state.board[i]=new Array(9).fill(0);
-        }
+        
 
-        //this.elementRef=React.createRef();
     }
 
     componentDidMount(){
@@ -35,15 +34,21 @@ class Sudoku extends React.Component{
     }
 
     handleClick(i,j){
-        this.setState({boardIndex:[i,j]});
+        if(this.state.boardInitial[i][j]==0){
+            this.setState({ boardIndex: [i, j] });
+        }
+        
         
     }
 
     handleKeys(key){
+        console.log(parseInt(key));
+        let i = this.state.boardIndex[0];
+        let j = this.state.boardIndex[1];
         if(48>=key&&key<=57&& this.state.boardIndex){
-            let  i=this.state.boardIndex[0];
-            let j=this.state.boardIndex[1];
             this.setBoardAtIndex(i,j,key);
+        }else if (key==8||key==46){//Return key, delete key
+            this.setBoardAtIndex(i,j,0);
         }
     }
 
@@ -56,17 +61,24 @@ class Sudoku extends React.Component{
     }
 
     clearBoard(){
-        let board=new Array(9);
-        for(let i=0;i<9; i++){
-            board[i]=new Array(9).fill(0);
-        }
-        this.setState({board: board});
+        this.setState({
+            board: this.copyBoard(this.state.boardInitial)
+        });
     }
 
     solve(){
         var board=this.copyBoard(this.state.board);
         sudokuSolver(board);
         return board;
+    }
+
+    randomPuzzle(){
+        let board = samplePuzzles[Math.floor((samplePuzzles.length * Math.random()))]
+        this.setState({
+            boardInitial: board,
+            board: this.copyBoard(board),
+            boardIndex: null,
+        });
     }
 
     setBoardAtIndex(i,j,value){
@@ -126,16 +138,19 @@ class Sudoku extends React.Component{
             
             </div>
             <div className="game-buttons">
-                <button className="solver" onClick={()=>{ 
+                <button className="btn" onClick={()=>{ 
                     var board=this.solve();
                     this.setState({board:board});
                     }}>Solve
                 </button>
-                <button className="clear" onClick={()=>(this.clearBoard())}>
+                <button className="btn" onClick={()=>(this.clearBoard())}>
                     Clear
                 </button>
-                <button className="check" >
+                <button className="btn" >
                     Check
+                </button>
+                <button onClick={()=>(this.randomPuzzle())}>
+                    Random Puzzle
                 </button>
             </div>
         </div>
